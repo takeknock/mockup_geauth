@@ -68,23 +68,6 @@
     pDrawImage = [input pathtoImage: [input nowPath]];
     [input saveLayer:pDrawImage];
     
-    // check auth
-    
-    //    [self drawLine:[input nowPath]];
-    Boolean auth=[input check:pDrawImage];
-    pDrawImage = [input testFunc:pDrawImage];
-    self.canvas.image = pDrawImage;
-    
-    if(auth)
-//        self.msg.text = @"OK";
-    //次の画面に移動．認証できました！とか表示されてる単純な画面．戻るボタンとかあったらいいね！
-        
-//    else
-    //アラート出力．「認証できませんでした．もう一度ジェスチャーをお願いします．」
-    
-    //いろいろリセット．画面再読み込み．
-//        self.msg.text = @"NG";
-    UIGraphicsEndImageContext();
     
     
     // next gesture layer
@@ -116,15 +99,38 @@
     UIImage* selectedImage = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
     self.back_image.image = selectedImage;
     [self dismissViewControllerAnimated:YES completion:^{
-        
     }];
+}
+
+-(IBAction)tapGestureBtn
+{
+   
+
 }
 
 -(IBAction)tapAuthBtn
 {
     NSLog(@"認証開始");
-    AuthedViewController *second = [[AuthedViewController alloc] initWithNibName:@"AuthedViewController" bundle:nil];
+    // check auth
+    
+    [self drawLine:[input nowPath]];
+    Boolean auth=[input check:pDrawImage];
+    pDrawImage = [input testFunc:pDrawImage];
+    self.canvas.image = pDrawImage;
+    
+    if(auth)
+        //        self.msg.text = @"OK";
+        //次の画面に移動．認証できました！とか表示されてる単純な画面．戻るボタンとかあったらいいね！
+    
+        else
+            //アラート出力．「認証できませんでした．もう一度ジェスチャーをお願いします．」
+            
+            //いろいろリセット．画面再読み込み．
+            //        self.msg.text = @"NG";
+            AuthedViewController *second = [[AuthedViewController alloc] initWithNibName:@"AuthedViewController" bundle:nil];
     [self presentViewController:second animated:NO completion:nil];
+            UIGraphicsEndImageContext();
+    
 }
 
 - (void)viewDidLoad
