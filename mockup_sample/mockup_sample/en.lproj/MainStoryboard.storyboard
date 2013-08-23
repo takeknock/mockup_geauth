@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="11E2620" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
@@ -79,6 +79,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="GestureButton" destination="ag0-2p-BF8" id="dCs-dz-Zvv"/>
                         <outlet property="back_image" destination="Hoo-oi-sW3" id="g4o-cl-NoQ"/>
                         <outlet property="canvas" destination="hdT-SR-8fe" id="Y9z-jg-Hj7"/>
                     </connections>
@@ -95,9 +96,9 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
             <relationships>
                 <relationship kind="action" name="tapAuthBtn"/>
-                <relationship kind="action" name="tapBtn"/>
                 <relationship kind="action" name="tapGestureBtn"/>
                 <relationship kind="action" name="tapPictureBtn"/>
+                <relationship kind="outlet" name="GestureButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="back_image" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="canvas" candidateClass="UIImageView"/>
             </relationships>

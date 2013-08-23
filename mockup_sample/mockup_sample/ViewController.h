@@ -12,7 +12,7 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *canvas;
 @property (weak, nonatomic) IBOutlet UIImageView *back_image;
-@property IBOutlet UIImageView* imageView;
+@property (weak, nonatomic) IBOutlet UIButton *GestureButton;
 
 -(IBAction)tapPictureBtn;
 -(IBAction)tapGestureBtn;

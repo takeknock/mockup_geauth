@@ -322,10 +322,8 @@
     
     // 判定
     if(fLng>GESTURE_PTERR || cnt>GESTURE_LNERR) {
-        NSLog(@"error!");
         return false;
     } else {
-        NSLog(@"accept");
         return true;
     }
     

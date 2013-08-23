@@ -15,6 +15,8 @@
     UIImage *pDrawImage;
     id input;
     int wg;
+    int input_flag;
+    int auth_input_flag;
 }
 @end
 
@@ -32,49 +34,63 @@
 {
     UITouch *touch = [touches anyObject];
     CGPoint point = [touch locationInView:self.canvas];
+    // exception
+    if(point.y<0||point.y>320)
+        return;
     
-    [input setOptions:wg :90];
-    
-    // initalize path
-    [input initPath];
-    [input beginPath:point];
-    // set point
-    [input setStartPoint:point];
-    // print to console
-    [input touchLogging:point];
-    
+    if(input_flag) {
+        [input setOptions:wg :90];
+        // initalize path
+        [input initPath];
+        [input beginPath:point];
+        // set point
+        [input setStartPoint:point];
+        // print to console
+        [input touchLogging:point];
+    } else {
+    }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UITouch *touch = [touches anyObject];
     CGPoint point = [touch locationInView:self.canvas];
-    // set point
-    [input setPoint:point];
-    // print to console
-    [input touchLogging:point];
-    
+    // exception
+    if(point.y<0||point.y>320)
+        return;
+
+    if(input_flag) {
+        // set point
+        [input setPoint:point];
+        // print to console
+        [input touchLogging:point];
+    } else {
+        
+    }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UITouch *touch = [touches anyObject];
     CGPoint point = [touch locationInView:self.canvas];
-    // set point
-    [input setEndPoint:point];
-    // print to console
-    [input touchLogging:point];
+    // exception
+    if(point.y<0||point.y>320)
+        return;
+
+    if(input_flag) {
+        // set point
+        [input setEndPoint:point];
+        // print to console
+        [input touchLogging:point];
     
-    pDrawImage = [input pathtoImage: [input nowPath]];
-    [input saveLayer:pDrawImage];
+        pDrawImage = [input pathtoImage: [input nowPath]];
+        [input saveLayer:pDrawImage];
     
-    
-    
-    // next gesture layer
-    [input nextPath];
-    
-    if(wg==1)
-        wg=50;
+        // next gesture layer
+        [input nextPath];
+    } else {
+
+    }
 }
 
 //フォトライブラリ開く
@@ -96,6 +112,8 @@
 //サムネイル選択後
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
+    if(input_flag)
+        return;
     UIImage* selectedImage = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
     self.back_image.image = selectedImage;
     [self dismissViewControllerAnimated:YES completion:^{
@@ -104,12 +122,24 @@
 
 -(IBAction)tapGestureBtn
 {
-   
-
+    input_flag=(input_flag+1)%2;
+    //ボタンのラベルを変更
+    if(input_flag){
+        //UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        //button.frame = CGRectMake(10.0f, 120.0f, 300.0f, 50.0f);
+        
+        [self.GestureButton setTitle:@"登録中..." forState:UIControlStateNormal];
+        NSLog(@"%d",input_flag);
+    }else{
+        [self.GestureButton setTitle:@"ジェスチャー登録" forState:UIControlStateNormal];
+        NSLog(@"%d",input_flag);
+    }
 }
 
 -(IBAction)tapAuthBtn
 {
+    if(input_flag)
+        return;
     NSLog(@"認証開始");
     // check auth
     
@@ -117,20 +147,20 @@
     Boolean auth=[input check:pDrawImage];
     pDrawImage = [input testFunc:pDrawImage];
     self.canvas.image = pDrawImage;
-    
-    if(auth)
-        //        self.msg.text = @"OK";
+
+    NSString *msg = [NSString alloc];
+    if(auth) {
         //次の画面に移動．認証できました！とか表示されてる単純な画面．戻るボタンとかあったらいいね！
-    
-        else
-            //アラート出力．「認証できませんでした．もう一度ジェスチャーをお願いします．」
-            
-            //いろいろリセット．画面再読み込み．
-            //        self.msg.text = @"NG";
-            AuthedViewController *second = [[AuthedViewController alloc] initWithNibName:@"AuthedViewController" bundle:nil];
-    [self presentViewController:second animated:NO completion:nil];
-            UIGraphicsEndImageContext();
-    
+        NSLog(@"accept!");
+        msg = @"err";
+    } else {
+        //アラート出力．「認証できませんでした．もう一度ジェスチャーをお願いします．」
+        //いろいろリセット．画面再読み込み．
+        NSLog(@"denied!");
+        msg = @"err";
+    }
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"GeAuth" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert show];
 }
 
 - (void)viewDidLoad
@@ -139,7 +169,9 @@
 	// Do any additional setup after loading the view, typically from a nib.
     input = [GeAuthInput alloc];
     
-    wg=1;
+    wg=35;
+    input_flag=0;
+    auth_input_flag=0;
     [input setOptions:wg :90];
     UIImage *image = [UIImage imageNamed:@"test.jpg"];
     self.back_image.image = [input thinning: image];
