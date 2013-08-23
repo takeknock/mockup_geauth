@@ -147,6 +147,7 @@
     input_flag=(input_flag+1)%2;
     //ボタンのラベルを変更
     if(input_flag){
+        [input initGesData];
         [self.GestureButton setTitle:@"登録中..." forState:UIControlStateNormal];
         NSLog(@"%d",input_flag);
     }else{
@@ -154,7 +155,6 @@
         [alert show];
         [self.GestureButton setTitle:@"ジェスチャー登録" forState:UIControlStateNormal];
         NSLog(@"%d",input_flag);
-        [input initInData];
     }
 }
 
@@ -163,13 +163,14 @@
     if(input_flag)
         return;
     NSLog(@"認証開始");
+    [input setMode:0];
     if(auth_input_flag) {
         auth_input_flag = 0;
         // check auth
     
 //        [self drawLine:[input nowPath]];
 
-        Boolean auth=[input check:pDrawImage];
+        Boolean auth=[input checkAuth];
         pDrawImage = [input testFunc:pDrawImage];
         self.canvas.image = pDrawImage;
 
@@ -186,8 +187,8 @@
         }
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"GeAuth" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
-        [input initGesData];
     } else {
+        [input initInData];
         auth_input_flag=1;
     }
 }

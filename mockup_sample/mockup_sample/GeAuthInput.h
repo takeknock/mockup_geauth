@@ -55,10 +55,10 @@
 -(UIImage*)pathtoImage:(UIBezierPath*)path;
 -(void)saveLayer:(UIImage*)image;
 -(UIImage*)thinning:(UIImage*)img;
--(Boolean)check:(UIImage*)img;
+-(Boolean)check:(UIImage*)anImage :(UIImage*)anImage2;
 
 
--(Boolean)setMode;
+-(Boolean)setMode:(Boolean)mode;
 -(Boolean)checkAuth;
 -(void)initInData;
 -(void)initGesData;

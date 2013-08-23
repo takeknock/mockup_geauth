@@ -278,10 +278,8 @@
     return anImage;
 }
 
--(Boolean)setMode {
-    int n=signupMode;
-    n=(n+1)%2;
-    signupMode=n;
+-(Boolean)setMode:(Boolean)mode {
+    signupMode = mode;
     return signupMode;
 }
 
