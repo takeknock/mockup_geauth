@@ -48,6 +48,10 @@
 
         // print to console
         [input touchLogging:point];
+        
+        [self drawLine:[input nowPath]];
+    } else if(auth_input_flag) {
+        [self drawLine:[input nowPath]];
     } else {
     }
 }
@@ -65,6 +69,10 @@
         [input setPoint:point];
         // print to console
         [input touchLogging:point];
+
+        [self drawLine:[input nowPath]];
+    } else if(auth_input_flag) {
+        [self drawLine:[input nowPath]];
     } else {
         
     }
@@ -98,15 +106,19 @@
             auth_input_flag = 0;
             return;
         }
+    } else if(auth_input_flag) {
+        [self drawLine:[input nowPath]];
     } else {
-
+        
     }
+    self.canvas.image = nil;
+    UIGraphicsEndImageContext();
 }
 
 //フォトライブラリ開く
 -(IBAction)tapPictureBtn
 {
-    if(input_flag)
+    if(input_flag || auth_input_flag)
         return;
     if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary])
     {
@@ -142,6 +154,7 @@
         [alert show];
         [self.GestureButton setTitle:@"ジェスチャー登録" forState:UIControlStateNormal];
         NSLog(@"%d",input_flag);
+        [input initInData];
     }
 }
 
@@ -150,26 +163,33 @@
     if(input_flag)
         return;
     NSLog(@"認証開始");
-    // check auth
+    if(auth_input_flag) {
+        auth_input_flag = 0;
+        // check auth
     
-    [self drawLine:[input nowPath]];
-    Boolean auth=[input check:pDrawImage];
-    pDrawImage = [input testFunc:pDrawImage];
-    self.canvas.image = pDrawImage;
+//        [self drawLine:[input nowPath]];
 
-    NSString *msg = [NSString alloc];
-    if(auth) {
-        //次の画面に移動．認証できました！とか表示されてる単純な画面．戻るボタンとかあったらいいね！
-        NSLog(@"accept!");
-        msg = @"err";
+        Boolean auth=[input check:pDrawImage];
+        pDrawImage = [input testFunc:pDrawImage];
+        self.canvas.image = pDrawImage;
+
+        NSString *msg = [NSString alloc];
+        if(auth) {
+            //次の画面に移動．認証できました！とか表示されてる単純な画面．戻るボタンとかあったらいいね！
+            NSLog(@"accept!");
+            msg = @"err";
+        } else {
+            //アラート出力．「認証できませんでした．もう一度ジェスチャーをお願いします．」
+            //いろいろリセット．画面再読み込み．
+            NSLog(@"denied!");
+            msg = @"err";
+        }
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"GeAuth" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        [input initGesData];
     } else {
-        //アラート出力．「認証できませんでした．もう一度ジェスチャーをお願いします．」
-        //いろいろリセット．画面再読み込み．
-        NSLog(@"denied!");
-        msg = @"err";
+        auth_input_flag=1;
     }
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"GeAuth" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alert show];
 }
 
 - (void)viewDidLoad

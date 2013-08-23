@@ -24,6 +24,7 @@
     int gCnt; // Gesture入力回数
     double dWeight;
     int iPrecision;
+    Boolean signupMode;
 
     UIBezierPath *pBezierPath[GESTURE_MAX]; // tmp
     
@@ -56,7 +57,12 @@
 -(UIImage*)thinning:(UIImage*)img;
 -(Boolean)check:(UIImage*)img;
 
--(UIImage*)testFunc:(UIImage*)img;
 
+-(Boolean)setMode;
+-(Boolean)checkAuth;
+-(void)initInData;
+-(void)initGesData;
+
+-(UIImage*)testFunc:(UIImage*)img;
 
 @end
