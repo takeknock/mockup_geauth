@@ -37,8 +37,10 @@
     if(iLayer<GESTURE_MAX) {
         iLayer++;
         return true;
-    } else
+    } else {
+        iLayer = 0;
         return false;
+    }
 }
 
 -(UIBezierPath*)nowPath {

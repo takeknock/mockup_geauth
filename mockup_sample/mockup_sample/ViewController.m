@@ -45,6 +45,7 @@
         [input beginPath:point];
         // set point
         [input setStartPoint:point];
+
         // print to console
         [input touchLogging:point];
     } else {
@@ -87,7 +88,16 @@
         [input saveLayer:pDrawImage];
     
         // next gesture layer
-        [input nextPath];
+        Boolean res = [input nextPath];
+        if(!res) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"GeAuth" message:@"ジェスチャー登録しました" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert show];
+            // ボタンもオフにする
+            input_flag = 0;
+            [self.GestureButton setTitle:@"ジェスチャー登録" forState:UIControlStateNormal];
+            auth_input_flag = 0;
+            return;
+        }
     } else {
 
     }
@@ -96,6 +106,8 @@
 //フォトライブラリ開く
 -(IBAction)tapPictureBtn
 {
+    if(input_flag)
+        return;
     if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary])
     {
         UIImagePickerController* imagePicker = [UIImagePickerController new];
@@ -112,8 +124,6 @@
 //サムネイル選択後
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    if(input_flag)
-        return;
     UIImage* selectedImage = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
     self.back_image.image = selectedImage;
     [self dismissViewControllerAnimated:YES completion:^{
@@ -125,12 +135,11 @@
     input_flag=(input_flag+1)%2;
     //ボタンのラベルを変更
     if(input_flag){
-        //UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        //button.frame = CGRectMake(10.0f, 120.0f, 300.0f, 50.0f);
-        
         [self.GestureButton setTitle:@"登録中..." forState:UIControlStateNormal];
         NSLog(@"%d",input_flag);
     }else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"GeAuth" message:@"ジェスチャー登録しました" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
         [self.GestureButton setTitle:@"ジェスチャー登録" forState:UIControlStateNormal];
         NSLog(@"%d",input_flag);
     }
