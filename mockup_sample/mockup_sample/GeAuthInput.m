@@ -292,26 +292,30 @@
 }
 
 -(Boolean)checkAuth {
-    if(iLayer!=gCnt)
+/*    if(iLayer!=gCnt)
         return false;
-
+*/
     int err=0;
-    for(int i=0;i<gCnt;i++) {
+    for(int i=0;i<1;i++) {
         // ジェスチャーなぞれてるか判定
-        err+=[self check: pLayer[i]:pGLayer[i]];
+//        err+=[self check: pLayer[i]:pGLayer[i]];
         // 開始・終着点の誤差距離算出
         // 値が20程度の誤差まで許容すべき
-	    float sx = ptStart[i].x - ptStart[i].x;
-        float sy = ptStart[i].y - ptStart[i].y;
-        float ex = ptEnd[i].x - ptEnd[i].x;
-        float ey = ptEnd[i].y - ptEnd[i].y;
+	    float sx = ptStart[i].x - ptGStart[i].x;
+        float sy = ptStart[i].y - ptGStart[i].y;
+        float ex = ptEnd[i].x - ptGEnd[i].x;
+        float ey = ptEnd[i].y - ptGEnd[i].y;
         float fLng = (sqrt(sx*sx+sy*sy)+sqrt(ex*ex+ey*ey)) /2;
-        if(fLng>GESTURE_PTERR)
+        if(fLng>GESTURE_PTERR) {
             err++;
+            NSLog(@"開始とかがずれた");
+        }
     }
     // 判定
-    if(err)
+    if(err!=0) {
+        NSLog(@"開始とかがずれた-%d",err);
         return false;
+    }
     else
         return true;
 }

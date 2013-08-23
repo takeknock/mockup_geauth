@@ -32,6 +32,7 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    [input setMode:input_flag];
     UITouch *touch = [touches anyObject];
     CGPoint point = [touch locationInView:self.canvas];
     // exception
@@ -39,7 +40,7 @@
         return;
     
     if(input_flag) {
-        [input setOptions:wg :90];
+        [input setOptions:1 :90];
         // initalize path
         [input initPath];
         [input beginPath:point];
@@ -51,6 +52,16 @@
         
         [self drawLine:[input nowPath]];
     } else if(auth_input_flag) {
+        [input setOptions:wg :90];
+        // initalize path
+        [input initPath];
+        [input beginPath:point];
+        // set point
+        [input setStartPoint:point];
+        
+        // print to console
+        [input touchLogging:point];
+        
         [self drawLine:[input nowPath]];
     } else {
     }
@@ -72,10 +83,14 @@
 
         [self drawLine:[input nowPath]];
     } else if(auth_input_flag) {
-        [self drawLine:[input nowPath]];
+        // set point
+        [input setPoint:point];
+        // print to console
+        [input touchLogging:point];
     } else {
         
     }
+    [self drawLine:[input nowPath]];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
@@ -107,6 +122,21 @@
             return;
         }
     } else if(auth_input_flag) {
+        // next gesture layer
+        Boolean res = [input nextPath];
+        if(!res) {
+            input_flag = 0;
+            auth_input_flag = 0;
+            return;
+        }
+        // set point
+        [input setEndPoint:point];
+        // print to console
+        [input touchLogging:point];
+        
+        pDrawImage = [input pathtoImage: [input nowPath]];
+        [input saveLayer:pDrawImage];
+        
         [self drawLine:[input nowPath]];
     } else {
         
@@ -178,7 +208,7 @@
         if(auth) {
             //次の画面に移動．認証できました！とか表示されてる単純な画面．戻るボタンとかあったらいいね！
             NSLog(@"accept!");
-            msg = @"err";
+            msg = @"accept!";
         } else {
             //アラート出力．「認証できませんでした．もう一度ジェスチャーをお願いします．」
             //いろいろリセット．画面再読み込み．
